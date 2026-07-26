@@ -4,9 +4,8 @@ import android.app.Application
 import com.example.mifinca.data.local.DatabaseDriverFactory
 import com.example.mifinca.data.repository.InitialDataRepository
 import com.example.mifinca.di.appModule
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -37,7 +36,7 @@ class MiFincaApplication : Application() {
             InitialDataRepository::class.java
         )
         
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        runBlocking(Dispatchers.IO) {
             initialDataRepo.initializeDefaultData()
         }
     }

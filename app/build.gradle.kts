@@ -51,7 +51,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10")
+            implementation(libs.androidx.navigation.compose)
+            implementation("io.insert-koin:koin-compose-viewmodel:4.0.0")
             
             // SQLDelight
             implementation(libs.sqldelight.runtime)
@@ -80,12 +81,12 @@ kotlin {
 
 android {
     namespace = "com.example.mifinca"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.mifinca"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
     }

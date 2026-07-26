@@ -81,7 +81,8 @@ class UserRepository(private val database: MiFincaDatabase) {
     
     suspend fun validateCredentials(email: String, password: String): User? = 
         withContext(Dispatchers.Default) {
-            val user = queries.getUserByEmail(email).executeAsOneOrNull()
+            val normalizedEmail = email.trim().lowercase()
+            val user = queries.getUserByEmail(normalizedEmail).executeAsOneOrNull()
             // En producción, aquí deberías usar bcrypt o similar
             if (user != null && user.passwordHash == hashPassword(password)) {
                 user.toDomain()

@@ -20,8 +20,8 @@ fun AppNavigation() {
     ) {
         composable("login") {
             LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate("dashboard") {
+                onLoginSuccess = { tenantId ->
+                    navController.navigate("dashboard/$tenantId") {
                         popUpTo("login") { inclusive = true }
                     }
                 },
@@ -31,10 +31,12 @@ fun AppNavigation() {
             )
         }
         
-        composable("dashboard") {
+        composable("dashboard/{tenantId}") { backStackEntry ->
+            val tenantId = backStackEntry.arguments?.getString("tenantId") ?: ""
             DashboardScreen(
+                tenantId = tenantId,
                 onNavigateToAnimals = {
-                    navController.navigate("animal_list")
+                    navController.navigate("animal_list/$tenantId")
                 },
                 onNavigateToSync = {
                     // Navigate to Sync conflict resolution
@@ -42,8 +44,10 @@ fun AppNavigation() {
             )
         }
         
-        composable("animal_list") {
+        composable("animal_list/{tenantId}") { backStackEntry ->
+            val tenantId = backStackEntry.arguments?.getString("tenantId") ?: ""
             AnimalListScreen(
+                tenantId = tenantId,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToDetail = { tag ->
                     navController.navigate("animal_detail/$tag")
