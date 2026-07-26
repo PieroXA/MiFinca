@@ -12,16 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,19 +31,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mifinca.presentation.component.CustomTextField
 import com.example.mifinca.presentation.component.PrimaryButton
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onLoginSuccess: (String) -> Unit, // Ahora pasa el tenantId
+    onNavigateToRegister: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    
+    // Manejar errores
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearError()
+        }
+    }
+    
+    // Navegar al dashboard cuando se autentique
+    LaunchedEffect(uiState.isAuthenticated) {
+        if (uiState.isAuthenticated && uiState.user != null) {
+            onLoginSuccess(uiState.user!!.tenantId)
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -126,31 +142,34 @@ fun LoginScreen(
                     )
 
                     CustomTextField(
-                        value = email,
-                        onValueChange = { email = it },
+                        value = uiState.email,
+                        onValueChange = { viewModel.onEmailChange(it) },
                         label = "Correo Electrónico",
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
 
                     CustomTextField(
-                        value = password,
-                        onValueChange = { password = it },
+                        value = uiState.password,
+                        onValueChange = { viewModel.onPasswordChange(it) },
                         label = "Contraseña",
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
+                    
+                    if (uiState.error != null) {
+                        Text(
+                            text = uiState.error!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     PrimaryButton(
                         text = "Entrar",
-                        isLoading = isLoading,
-                        onClick = {
-                            // TODO: Add actual validation & VM call
-                            isLoading = true
-                            // Simulate network
-                            // onLoginSuccess()
-                        }
+                        isLoading = uiState.isLoading,
+                        onClick = { viewModel.login() }
                     )
                 }
             }
