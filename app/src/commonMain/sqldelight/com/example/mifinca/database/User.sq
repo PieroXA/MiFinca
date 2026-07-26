@@ -1,0 +1,40 @@
+-- User table definition
+CREATE TABLE IF NOT EXISTS User (
+    id TEXT PRIMARY KEY NOT NULL,
+    tenantId TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    passwordHash TEXT NOT NULL,
+    fullName TEXT NOT NULL,
+    role TEXT NOT NULL,
+    isActive INTEGER AS Boolean NOT NULL DEFAULT 1,
+    createdAt INTEGER NOT NULL
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_user_tenant ON User(tenantId);
+CREATE INDEX IF NOT EXISTS idx_user_email ON User(email);
+
+-- Queries
+insertUser:
+INSERT OR REPLACE INTO User(id, tenantId, email, passwordHash, fullName, role, isActive, createdAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+getUserById:
+SELECT * FROM User WHERE id = ?;
+
+getUserByEmail:
+SELECT * FROM User WHERE email = ?;
+
+getUsersByTenant:
+SELECT * FROM User WHERE tenantId = ? AND isActive = 1;
+
+updateUser:
+UPDATE User
+SET fullName = ?, role = ?, isActive = ?
+WHERE id = ?;
+
+deleteUser:
+DELETE FROM User WHERE id = ?;
+
+getAllUsers:
+SELECT * FROM User;

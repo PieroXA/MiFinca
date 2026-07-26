@@ -1,0 +1,83 @@
+-- Animal table definition
+CREATE TABLE IF NOT EXISTS Animal (
+    id TEXT PRIMARY KEY NOT NULL,
+    tenantId TEXT NOT NULL,
+    farmId TEXT NOT NULL,
+    visualTag TEXT NOT NULL,
+    rfidTag TEXT,
+    species TEXT NOT NULL,
+    breed TEXT,
+    sex TEXT NOT NULL,
+    birthDate TEXT NOT NULL,
+    weightKg REAL,
+    color TEXT,
+    status TEXT NOT NULL DEFAULT 'ACTIVE',
+    sireId TEXT,
+    damId TEXT,
+    photoUrl TEXT,
+    notes TEXT,
+    statusDate TEXT,
+    statusNotes TEXT,
+    syncVersion INTEGER NOT NULL DEFAULT 0,
+    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL,
+    FOREIGN KEY (farmId) REFERENCES Farm(id),
+    FOREIGN KEY (sireId) REFERENCES Animal(id),
+    FOREIGN KEY (damId) REFERENCES Animal(id)
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_animal_tenant ON Animal(tenantId);
+CREATE INDEX IF NOT EXISTS idx_animal_farm ON Animal(tenantId, farmId);
+CREATE INDEX IF NOT EXISTS idx_animal_sync ON Animal(tenantId, syncVersion);
+CREATE INDEX IF NOT EXISTS idx_animal_status ON Animal(tenantId, status);
+CREATE INDEX IF NOT EXISTS idx_animal_visual_tag ON Animal(tenantId, visualTag);
+
+-- Queries
+insertAnimal:
+INSERT OR REPLACE INTO Animal(id, tenantId, farmId, visualTag, rfidTag, species, breed, sex, birthDate, weightKg, color, status, sireId, damId, photoUrl, notes, statusDate, statusNotes, syncVersion, isDeleted, createdAt, updatedAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+getAnimalById:
+SELECT * FROM Animal WHERE id = ? AND isDeleted = 0;
+
+getAnimalsByTenant:
+SELECT * FROM Animal WHERE tenantId = ? AND isDeleted = 0 ORDER BY visualTag ASC;
+
+getAnimalsByFarm:
+SELECT * FROM Animal WHERE tenantId = ? AND farmId = ? AND isDeleted = 0 ORDER BY visualTag ASC;
+
+getAnimalsByStatus:
+SELECT * FROM Animal WHERE tenantId = ? AND status = ? AND isDeleted = 0 ORDER BY visualTag ASC;
+
+searchAnimals:
+SELECT * FROM Animal 
+WHERE tenantId = ? 
+AND (visualTag LIKE '%' || ? || '%' OR rfidTag LIKE '%' || ? || '%')
+AND isDeleted = 0 
+ORDER BY visualTag ASC;
+
+updateAnimal:
+UPDATE Animal
+SET farmId = ?, visualTag = ?, rfidTag = ?, species = ?, breed = ?, sex = ?, birthDate = ?, weightKg = ?, color = ?, notes = ?, updatedAt = ?
+WHERE id = ?;
+
+updateAnimalStatus:
+UPDATE Animal
+SET status = ?, statusDate = ?, statusNotes = ?, updatedAt = ?
+WHERE id = ?;
+
+softDeleteAnimal:
+UPDATE Animal
+SET isDeleted = 1, updatedAt = ?
+WHERE id = ?;
+
+countAnimalsByTenant:
+SELECT COUNT(*) FROM Animal WHERE tenantId = ? AND isDeleted = 0;
+
+countAnimalsByFarm:
+SELECT COUNT(*) FROM Animal WHERE tenantId = ? AND farmId = ? AND isDeleted = 0;
+
+countAnimalsByStatus:
+SELECT COUNT(*) FROM Animal WHERE tenantId = ? AND status = ? AND isDeleted = 0;

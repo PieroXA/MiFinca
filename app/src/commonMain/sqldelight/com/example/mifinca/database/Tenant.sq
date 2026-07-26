@@ -1,0 +1,30 @@
+-- Tenant table definition
+CREATE TABLE IF NOT EXISTS Tenant (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    plan TEXT NOT NULL DEFAULT 'basic',
+    globalSyncVersion INTEGER NOT NULL DEFAULT 0,
+    isActive INTEGER AS Boolean NOT NULL DEFAULT 1,
+    createdAt INTEGER NOT NULL
+);
+
+-- Queries
+insertTenant:
+INSERT OR REPLACE INTO Tenant(id, name, plan, globalSyncVersion, isActive, createdAt)
+VALUES (?, ?, ?, ?, ?, ?);
+
+getTenantById:
+SELECT * FROM Tenant WHERE id = ?;
+
+updateTenant:
+UPDATE Tenant
+SET name = ?, plan = ?, isActive = ?
+WHERE id = ?;
+
+incrementSyncVersion:
+UPDATE Tenant
+SET globalSyncVersion = globalSyncVersion + 1
+WHERE id = ?;
+
+getAllTenants:
+SELECT * FROM Tenant WHERE isActive = 1;

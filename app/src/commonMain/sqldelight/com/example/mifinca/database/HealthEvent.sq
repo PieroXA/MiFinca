@@ -1,0 +1,61 @@
+-- HealthEvent table definition
+CREATE TABLE IF NOT EXISTS HealthEvent (
+    id TEXT PRIMARY KEY NOT NULL,
+    tenantId TEXT NOT NULL,
+    animalId TEXT NOT NULL,
+    eventType TEXT NOT NULL,
+    eventDate TEXT NOT NULL,
+    productName TEXT,
+    doseMl REAL,
+    lotNumber TEXT,
+    vetName TEXT,
+    nextDate TEXT,
+    notes TEXT,
+    cost REAL,
+    bulkBatchId TEXT,
+    syncVersion INTEGER NOT NULL DEFAULT 0,
+    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL,
+    FOREIGN KEY (animalId) REFERENCES Animal(id)
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_health_animal ON HealthEvent(tenantId, animalId);
+CREATE INDEX IF NOT EXISTS idx_health_sync ON HealthEvent(tenantId, syncVersion);
+CREATE INDEX IF NOT EXISTS idx_health_next_date ON HealthEvent(tenantId, nextDate);
+
+-- Queries
+insertHealthEvent:
+INSERT OR REPLACE INTO HealthEvent(id, tenantId, animalId, eventType, eventDate, productName, doseMl, lotNumber, vetName, nextDate, notes, cost, bulkBatchId, syncVersion, isDeleted, createdAt, updatedAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+getHealthEventById:
+SELECT * FROM HealthEvent WHERE id = ? AND isDeleted = 0;
+
+getHealthEventsByAnimal:
+SELECT * FROM HealthEvent WHERE tenantId = ? AND animalId = ? AND isDeleted = 0 ORDER BY eventDate DESC;
+
+getUpcomingHealthEvents:
+SELECT * FROM HealthEvent 
+WHERE tenantId = ? 
+AND nextDate IS NOT NULL 
+AND nextDate >= ?
+AND isDeleted = 0 
+ORDER BY nextDate ASC;
+
+getHealthEventsByType:
+SELECT * FROM HealthEvent WHERE tenantId = ? AND eventType = ? AND isDeleted = 0 ORDER BY eventDate DESC;
+
+updateHealthEvent:
+UPDATE HealthEvent
+SET eventType = ?, eventDate = ?, productName = ?, doseMl = ?, lotNumber = ?, vetName = ?, nextDate = ?, notes = ?, cost = ?, updatedAt = ?
+WHERE id = ?;
+
+softDeleteHealthEvent:
+UPDATE HealthEvent
+SET isDeleted = 1, updatedAt = ?
+WHERE id = ?;
+
+countHealthEventsByAnimal:
+SELECT COUNT(*) FROM HealthEvent WHERE tenantId = ? AND animalId = ? AND isDeleted = 0;

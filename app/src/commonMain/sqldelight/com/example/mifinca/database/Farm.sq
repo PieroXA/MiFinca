@@ -1,0 +1,42 @@
+-- Farm table definition
+CREATE TABLE IF NOT EXISTS Farm (
+    id TEXT PRIMARY KEY NOT NULL,
+    tenantId TEXT NOT NULL,
+    name TEXT NOT NULL,
+    address TEXT,
+    latitude REAL,
+    longitude REAL,
+    notes TEXT,
+    syncVersion INTEGER NOT NULL DEFAULT 0,
+    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_farm_tenant ON Farm(tenantId);
+CREATE INDEX IF NOT EXISTS idx_farm_sync ON Farm(tenantId, syncVersion);
+
+-- Queries
+insertFarm:
+INSERT OR REPLACE INTO Farm(id, tenantId, name, address, latitude, longitude, notes, syncVersion, isDeleted, createdAt, updatedAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+getFarmById:
+SELECT * FROM Farm WHERE id = ? AND isDeleted = 0;
+
+getFarmsByTenant:
+SELECT * FROM Farm WHERE tenantId = ? AND isDeleted = 0 ORDER BY name ASC;
+
+updateFarm:
+UPDATE Farm
+SET name = ?, address = ?, latitude = ?, longitude = ?, notes = ?, updatedAt = ?
+WHERE id = ?;
+
+softDeleteFarm:
+UPDATE Farm
+SET isDeleted = 1, updatedAt = ?
+WHERE id = ?;
+
+countFarmsByTenant:
+SELECT COUNT(*) FROM Farm WHERE tenantId = ? AND isDeleted = 0;
