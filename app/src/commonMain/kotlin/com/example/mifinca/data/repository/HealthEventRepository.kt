@@ -5,6 +5,8 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.example.mifinca.data.mapper.toDomain
 import com.example.mifinca.database.MiFincaDatabase
+import com.example.mifinca.database.GetUpcomingHealthEvents as DbUpcomingHealthEvent
+import com.example.mifinca.database.HealthEvent as DbHealthEvent
 import com.example.mifinca.domain.model.HealthEvent
 import com.example.mifinca.domain.model.HealthEventType
 import kotlinx.coroutines.Dispatchers
@@ -30,21 +32,21 @@ class HealthEventRepository(private val database: MiFincaDatabase) {
         return queries.getHealthEventsByAnimal(tenantId, animalId)
             .asFlow()
             .mapToList(Dispatchers.Default)
-            .map { events -> events.map { it.toDomain() } }
+            .map { events -> events.map { healthEvent: DbHealthEvent -> healthEvent.toDomain() } }
     }
     
     fun getUpcomingHealthEvents(tenantId: String, fromDate: String): Flow<List<HealthEvent>> {
         return queries.getUpcomingHealthEvents(tenantId, fromDate)
             .asFlow()
             .mapToList(Dispatchers.Default)
-            .map { events -> events.map { it.toDomain() } }
+            .map { events -> events.map { healthEvent: DbUpcomingHealthEvent -> healthEvent.toDomain() } }
     }
     
     fun getHealthEventsByType(tenantId: String, eventType: HealthEventType): Flow<List<HealthEvent>> {
         return queries.getHealthEventsByType(tenantId, eventType.name)
             .asFlow()
             .mapToList(Dispatchers.Default)
-            .map { events -> events.map { it.toDomain() } }
+            .map { events -> events.map { healthEvent: DbHealthEvent -> healthEvent.toDomain() } }
     }
     
     suspend fun insertHealthEvent(event: HealthEvent) = withContext(Dispatchers.Default) {
@@ -63,7 +65,7 @@ class HealthEventRepository(private val database: MiFincaDatabase) {
             cost = event.cost,
             bulkBatchId = event.bulkBatchId,
             syncVersion = event.syncVersion,
-            isDeleted = event.isDeleted,
+            isDeleted = if (event.isDeleted) 1L else 0L,
             createdAt = event.createdAt,
             updatedAt = event.updatedAt
         )

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Movement (
     reason TEXT NOT NULL,
     notes TEXT,
     syncVersion INTEGER NOT NULL DEFAULT 0,
-    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isDeleted INTEGER NOT NULL DEFAULT 0,
     createdAt INTEGER NOT NULL,
     updatedAt INTEGER NOT NULL,
     FOREIGN KEY (animalId) REFERENCES Animal(id),

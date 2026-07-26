@@ -26,18 +26,17 @@ class MiFincaApplication : Application() {
                 androidModule
             )
         }
-        
-        // Inicializar datos de prueba
+
         initializeData()
     }
-    
+
     private fun initializeData() {
-        val initialDataRepo = org.koin.java.KoinJavaComponent.get<InitialDataRepository>(
+        val initialDataRepository = org.koin.java.KoinJavaComponent.get<InitialDataRepository>(
             InitialDataRepository::class.java
         )
-        
+
         runBlocking(Dispatchers.IO) {
-            initialDataRepo.initializeDefaultData()
+            initialDataRepository.initializeDefaultData()
         }
     }
 }

@@ -42,31 +42,26 @@ class LoginViewModel(
         viewModelScope.launch {
             try {
                 val user = userRepository.validateCredentials(email, password)
-                
+
                 if (user != null) {
-                    _uiState.update { 
+                    _uiState.update {
                         it.copy(
-                            isLoading = false,
                             isAuthenticated = true,
                             user = user,
                             error = null
                         )
                     }
                 } else {
-                    _uiState.update { 
-                        it.copy(
-                            isLoading = false,
-                            error = "Credenciales incorrectas"
-                        )
+                    _uiState.update {
+                        it.copy(error = "Credenciales incorrectas")
                     }
                 }
             } catch (e: Exception) {
-                _uiState.update { 
-                    it.copy(
-                        isLoading = false,
-                        error = "Error al iniciar sesión: ${e.message}"
-                    )
+                _uiState.update {
+                    it.copy(error = "Error al iniciar sesión: ${e.message}")
                 }
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }

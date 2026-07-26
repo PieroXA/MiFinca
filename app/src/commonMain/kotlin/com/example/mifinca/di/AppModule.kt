@@ -32,7 +32,7 @@ val appModule = module {
     single { InitialDataRepository(get()) }
     
     // ViewModels
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get<UserRepository>()) }
     
     viewModel { (tenantId: String) ->
         DashboardViewModel(

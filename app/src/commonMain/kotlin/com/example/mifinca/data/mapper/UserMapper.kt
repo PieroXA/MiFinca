@@ -11,7 +11,7 @@ fun DbUser.toDomain(): User {
         email = email,
         fullName = fullName,
         role = UserRole.fromString(role),
-        isActive = isActive,
+        isActive = isActive != 0L,
         createdAt = createdAt
     )
 }

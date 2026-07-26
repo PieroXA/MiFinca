@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS Animal (
     statusDate TEXT,
     statusNotes TEXT,
     syncVersion INTEGER NOT NULL DEFAULT 0,
-    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isDeleted INTEGER NOT NULL DEFAULT 0,
     createdAt INTEGER NOT NULL,
     updatedAt INTEGER NOT NULL,
     FOREIGN KEY (farmId) REFERENCES Farm(id),

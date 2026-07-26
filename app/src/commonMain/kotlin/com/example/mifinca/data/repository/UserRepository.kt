@@ -56,7 +56,7 @@ class UserRepository(private val database: MiFincaDatabase) {
             passwordHash = passwordHash,
             fullName = fullName,
             role = role.name,
-            isActive = isActive,
+            isActive = if (isActive) 1L else 0L,
             createdAt = createdAt
         )
     }
@@ -70,7 +70,7 @@ class UserRepository(private val database: MiFincaDatabase) {
         queries.updateUser(
             fullName = fullName,
             role = role.name,
-            isActive = isActive,
+            isActive = if (isActive) 1L else 0L,
             id = id
         )
     }

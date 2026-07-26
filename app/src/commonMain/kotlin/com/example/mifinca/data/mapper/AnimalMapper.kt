@@ -31,7 +31,7 @@ fun DbAnimal.toDomain(): Animal {
         statusDate = statusDate?.let { LocalDate.parse(it) },
         statusNotes = statusNotes,
         syncVersion = syncVersion,
-        isDeleted = isDeleted,
+        isDeleted = isDeleted != 0L,
         createdAt = createdAt,
         updatedAt = updatedAt
     )

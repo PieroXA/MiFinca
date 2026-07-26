@@ -42,7 +42,7 @@ class FarmRepository(private val database: MiFincaDatabase) {
             longitude = farm.longitude,
             notes = farm.notes,
             syncVersion = farm.syncVersion,
-            isDeleted = farm.isDeleted,
+            isDeleted = if (farm.isDeleted) 1L else 0L,
             createdAt = farm.createdAt,
             updatedAt = farm.updatedAt
         )

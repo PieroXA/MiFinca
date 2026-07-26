@@ -13,7 +13,7 @@ fun DbFarm.toDomain(): Farm {
         longitude = longitude,
         notes = notes,
         syncVersion = syncVersion,
-        isDeleted = isDeleted,
+        isDeleted = isDeleted != 0L,
         createdAt = createdAt,
         updatedAt = updatedAt
     )

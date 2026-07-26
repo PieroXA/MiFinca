@@ -5,10 +5,10 @@ CREATE TABLE IF NOT EXISTS Notification (
     healthEventId TEXT,
     type TEXT NOT NULL,
     message TEXT NOT NULL,
-    isRead INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isRead INTEGER NOT NULL DEFAULT 0,
     scheduledDate TEXT NOT NULL,
     syncVersion INTEGER NOT NULL DEFAULT 0,
-    isDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isDeleted INTEGER NOT NULL DEFAULT 0,
     createdAt INTEGER NOT NULL,
     updatedAt INTEGER NOT NULL,
     FOREIGN KEY (healthEventId) REFERENCES HealthEvent(id)

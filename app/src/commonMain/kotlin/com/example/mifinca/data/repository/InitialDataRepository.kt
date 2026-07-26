@@ -28,7 +28,7 @@ class InitialDataRepository(private val database: MiFincaDatabase) {
                 name = "Finca Demo",
                 plan = "basic",
                 globalSyncVersion = 0,
-                isActive = true,
+                isActive = 1L,
                 createdAt = now
             )
             
@@ -42,7 +42,7 @@ class InitialDataRepository(private val database: MiFincaDatabase) {
                 passwordHash = "demo123", // En producción usar hashing real
                 fullName = "Usuario Demo",
                 role = UserRole.OWNER.name,
-                isActive = true,
+                isActive = 1L,
                 createdAt = now
             )
             
@@ -56,7 +56,7 @@ class InitialDataRepository(private val database: MiFincaDatabase) {
                 longitude = -74.0721,
                 notes = "Finca de demostración",
                 syncVersion = 0,
-                isDeleted = false,
+                isDeleted = 0L,
                 createdAt = now,
                 updatedAt = now
             )
@@ -87,7 +87,7 @@ class InitialDataRepository(private val database: MiFincaDatabase) {
                     statusDate = null,
                     statusNotes = null,
                     syncVersion = 0,
-                    isDeleted = false,
+                    isDeleted = 0L,
                     createdAt = now,
                     updatedAt = now
                 )

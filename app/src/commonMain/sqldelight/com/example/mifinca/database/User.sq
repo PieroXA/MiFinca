@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS User (
     passwordHash TEXT NOT NULL,
     fullName TEXT NOT NULL,
     role TEXT NOT NULL,
-    isActive INTEGER AS Boolean NOT NULL DEFAULT 1,
+    isActive INTEGER NOT NULL DEFAULT 1,
     createdAt INTEGER NOT NULL
 );
 

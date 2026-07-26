@@ -75,7 +75,7 @@ class AnimalRepository(private val database: MiFincaDatabase) {
             statusDate = animal.statusDate?.toString(),
             statusNotes = animal.statusNotes,
             syncVersion = animal.syncVersion,
-            isDeleted = animal.isDeleted,
+            isDeleted = if (animal.isDeleted) 1L else 0L,
             createdAt = animal.createdAt,
             updatedAt = animal.updatedAt
         )
