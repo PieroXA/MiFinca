@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -33,19 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mifinca.presentation.component.CustomTextField
 import com.example.mifinca.presentation.component.PrimaryButton
 import com.example.mifinca.presentation.theme.BackgroundDark
-import com.example.mifinca.presentation.theme.GoldAccent
 import com.example.mifinca.presentation.theme.GradientEnd
 import com.example.mifinca.presentation.theme.GradientMid
 import com.example.mifinca.presentation.theme.GradientStart
-import com.example.mifinca.presentation.theme.OrangeSecondary
 import com.example.mifinca.presentation.theme.RosePrimary
-import com.example.mifinca.presentation.theme.SurfaceDark
 import com.example.mifinca.presentation.theme.SurfaceVariantDark
 import com.example.mifinca.presentation.theme.TextPrimaryDark
 import com.example.mifinca.presentation.theme.TextSecondaryDark
@@ -87,7 +84,7 @@ fun LoginScreen(
             Box(
                 modifier = Modifier
                     .size(280.dp)
-                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .clip(CircleShape)
                     .background(Color.White.copy(alpha = 0.06f))
                     .align(Alignment.TopEnd)
             )

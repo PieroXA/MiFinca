@@ -1,6 +1,5 @@
 package com.example.mifinca.di
 
-import com.example.mifinca.data.local.DatabaseDriverFactory
 import com.example.mifinca.data.remote.AuthApiService
 import com.example.mifinca.data.remote.createHttpClient
 import com.example.mifinca.data.repository.AnimalRepository
@@ -17,19 +16,20 @@ import com.example.mifinca.presentation.screen.dashboard.DashboardViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
+/**
+ * Módulo común — NO importa nada de androidMain ni iosMain.
+ * DatabaseDriverFactory se provee en el módulo de cada plataforma.
+ */
 val appModule = module {
 
     // ── Red ───────────────────────────────────────────────────────────────────
     single { createHttpClient() }
     single { AuthApiService(get()) }
 
-    // ── Base de datos local ───────────────────────────────────────────────────
-    single {
-        val driver = get<DatabaseDriverFactory>().createDriver()
-        MiFincaDatabase(driver)
-    }
+    // ── Base de datos (driver inyectado por el módulo de plataforma) ──────────
+    single { MiFincaDatabase(get()) }
 
-    // ── Repositorios locales ──────────────────────────────────────────────────
+    // ── Repositorios ──────────────────────────────────────────────────────────
     single { UserRepository(get()) }
     single { AnimalRepository(get()) }
     single { FarmRepository(get()) }
@@ -37,31 +37,31 @@ val appModule = module {
     single { InitialDataRepository(get()) }
 
     // ── ViewModels ────────────────────────────────────────────────────────────
-    viewModel { LoginViewModel(get<AuthApiService>()) }
-    viewModel { RegisterViewModel(get<AuthApiService>()) }
+    viewModel { LoginViewModel(get()) }
+    viewModel { RegisterViewModel(get()) }
 
     viewModel { (tenantId: String) ->
         DashboardViewModel(
-            animalRepository = get(),
-            farmRepository = get(),
+            animalRepository      = get(),
+            farmRepository        = get(),
             healthEventRepository = get(),
-            tenantId = tenantId
+            tenantId              = tenantId
         )
     }
 
     viewModel { (tenantId: String) ->
         AnimalListViewModel(
             animalRepository = get(),
-            tenantId = tenantId
+            tenantId         = tenantId
         )
     }
 
     viewModel { (tenantId: String, animalId: String?) ->
         AnimalFormViewModel(
             animalRepository = get(),
-            farmRepository = get(),
-            tenantId = tenantId,
-            animalId = animalId
+            farmRepository   = get(),
+            tenantId         = tenantId,
+            animalId         = animalId
         )
     }
 }
