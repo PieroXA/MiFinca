@@ -18,7 +18,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -103,7 +107,12 @@ fun LoginScreen(
                         .background(Color.White.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "🐄", fontSize = 34.sp)
+                    Icon(
+                        imageVector = Icons.Filled.Pets,
+                        contentDescription = "MiFinca",
+                        tint = Color.White,
+                        modifier = Modifier.size(38.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -192,11 +201,22 @@ fun LoginScreen(
                         .background(RosePrimary.copy(alpha = 0.12f))
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
-                    Text(
-                        text = "⚠️  ${uiState.error!!}",
-                        color = RosePrimary,
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Warning,
+                            contentDescription = null,
+                            tint = RosePrimary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = uiState.error!!,
+                            color = RosePrimary,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             }
 

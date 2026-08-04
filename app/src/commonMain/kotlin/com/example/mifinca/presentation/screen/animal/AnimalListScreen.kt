@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -37,7 +39,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.mifinca.presentation.component.AnimalCard
 import com.example.mifinca.presentation.theme.BackgroundDark
 import com.example.mifinca.presentation.theme.GradientMid
@@ -67,7 +68,11 @@ fun AnimalListScreen(
                 contentColor = Color.White,
                 shape = CircleShape
             ) {
-                Text(text = "+", fontSize = 24.sp, fontWeight = FontWeight.Light)
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Agregar animal",
+                    tint = Color.White
+                )
             }
         }
     ) { padding ->
@@ -138,7 +143,12 @@ fun AnimalListScreen(
                                     .background(SurfaceDark),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(text = "🐄", fontSize = 36.sp)
+                                Icon(
+                                    imageVector = Icons.Filled.Pets,
+                                    contentDescription = null,
+                                    tint = RosePrimary.copy(alpha = 0.5f),
+                                    modifier = Modifier.size(40.dp)
+                                )
                             }
                             Text(
                                 text = "No hay animales registrados",

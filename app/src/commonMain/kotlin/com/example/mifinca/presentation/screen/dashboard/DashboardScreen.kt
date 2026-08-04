@@ -17,7 +17,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.outlined.Vaccines
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mifinca.presentation.theme.BackgroundDark
 import com.example.mifinca.presentation.theme.GoldAccent
-import com.example.mifinca.presentation.theme.GradientEnd
 import com.example.mifinca.presentation.theme.GradientMid
 import com.example.mifinca.presentation.theme.GradientStart
 import com.example.mifinca.presentation.theme.OrangeSecondary
@@ -89,7 +95,7 @@ fun DashboardScreen(
             ) {
                 Column {
                     Text(
-                        text = "Buenos días 👋",
+                        text = "Buenos días",
                         style = MaterialTheme.typography.bodyMedium,
                         color = TextSecondaryDark
                     )
@@ -189,7 +195,7 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 DashboardModuleCard(
-                    emoji = "🐄",
+                    icon = Icons.Filled.Pets,
                     title = "Animales",
                     subtitle = "Gestión y registros",
                     accentColor = RosePrimary,
@@ -197,7 +203,7 @@ fun DashboardScreen(
                     onClick = onNavigateToAnimals
                 )
                 DashboardModuleCard(
-                    emoji = "💉",
+                    icon = Icons.Outlined.Vaccines,
                     title = "Salud",
                     subtitle = "Vacunas y tratamientos",
                     accentColor = OrangeSecondary,
@@ -213,7 +219,7 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 DashboardModuleCard(
-                    emoji = "⚖️",
+                    icon = Icons.Filled.SwapHoriz,
                     title = "Movimientos",
                     subtitle = "Compras y ventas",
                     accentColor = GoldAccent,
@@ -221,7 +227,7 @@ fun DashboardScreen(
                     onClick = {}
                 )
                 DashboardModuleCard(
-                    emoji = "🔄",
+                    icon = Icons.Filled.Sync,
                     title = "Sincronizar",
                     subtitle = "Actualizar datos",
                     accentColor = Color(0xFF6BBF5E),
@@ -237,7 +243,7 @@ fun DashboardScreen(
 
 @Composable
 private fun DashboardModuleCard(
-    emoji: String,
+    icon: ImageVector,
     title: String,
     subtitle: String,
     accentColor: Color,
@@ -252,7 +258,7 @@ private fun DashboardModuleCard(
             .clickable(onClick = onClick)
             .padding(18.dp)
     ) {
-        // Borde de acento arriba a la derecha
+        // Ícono de acento arriba a la derecha
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -261,7 +267,12 @@ private fun DashboardModuleCard(
                 .background(accentColor.copy(alpha = 0.15f)),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = emoji, fontSize = 18.sp)
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = accentColor,
+                modifier = Modifier.size(20.dp)
+            )
         }
 
         Column(
