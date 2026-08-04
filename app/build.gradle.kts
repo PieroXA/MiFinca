@@ -55,6 +55,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.materialIconsExtended)
             implementation(libs.androidx.navigation.compose)
             implementation("io.insert-koin:koin-compose-viewmodel:4.0.0")
             
