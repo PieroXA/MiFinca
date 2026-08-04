@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -13,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.mifinca.presentation.theme.RosePrimary
+import com.example.mifinca.presentation.theme.SurfaceVariantDark
+import com.example.mifinca.presentation.theme.TextPrimaryDark
+import com.example.mifinca.presentation.theme.TextSecondaryDark
 
 @Composable
 fun CustomTextField(
@@ -31,23 +34,27 @@ fun CustomTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Text(label, color = TextSecondaryDark) },
         modifier = modifier.fillMaxWidth(),
         isError = isError,
         supportingText = if (isError && errorMessage != null) {
-            { Text(text = errorMessage, color = MaterialTheme.colorScheme.error) }
+            { Text(text = errorMessage, color = Color(0xFFD15774)) }
         } else null,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
+            focusedBorderColor       = RosePrimary,
+            unfocusedBorderColor     = TextSecondaryDark.copy(alpha = 0.25f),
+            focusedContainerColor    = SurfaceVariantDark,
+            unfocusedContainerColor  = SurfaceVariantDark,
+            focusedTextColor         = TextPrimaryDark,
+            unfocusedTextColor       = TextPrimaryDark,
+            cursorColor              = RosePrimary,
+            focusedLabelColor        = RosePrimary,
         ),
         singleLine = true
     )

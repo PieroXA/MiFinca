@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -42,6 +43,9 @@ kotlin {
             
             // Coroutines Android
             implementation(libs.kotlinx.coroutines.android)
+
+            // Ktor Android
+            implementation(libs.ktor.client.android)
         }
         
         commonMain.dependencies {
@@ -70,11 +74,24 @@ kotlin {
             
             // DateTime
             implementation(libs.kotlinx.datetime)
+
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.auth)
+
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
         }
         
         iosMain.dependencies {
             // SQLDelight Native
             implementation(libs.sqldelight.native)
+
+            // Ktor Darwin
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

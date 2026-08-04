@@ -1,6 +1,7 @@
 package com.example.mifinca.presentation.screen.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,29 +12,39 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.mifinca.presentation.theme.BackgroundDark
+import com.example.mifinca.presentation.theme.GoldAccent
+import com.example.mifinca.presentation.theme.GradientEnd
+import com.example.mifinca.presentation.theme.GradientMid
+import com.example.mifinca.presentation.theme.GradientStart
+import com.example.mifinca.presentation.theme.OrangeSecondary
+import com.example.mifinca.presentation.theme.RosePrimary
+import com.example.mifinca.presentation.theme.SurfaceDark
+import com.example.mifinca.presentation.theme.SurfaceVariantDark
+import com.example.mifinca.presentation.theme.TextPrimaryDark
+import com.example.mifinca.presentation.theme.TextSecondaryDark
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     tenantId: String,
@@ -42,142 +53,231 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = koinViewModel { parametersOf(tenantId) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "MiFinca",
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimary
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(BackgroundDark)
+    ) {
+        // Blob decorativo arriba
+        Box(
+            modifier = Modifier
+                .size(300.dp)
+                .align(Alignment.TopEnd)
+                .clip(CircleShape)
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(RosePrimary.copy(alpha = 0.15f), Color.Transparent)
                     )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    // Sync Status Indicator Placeholder
-                    Box(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(Color.Green) // Green = Synced, Orange = Pending
-                    )
-                }
-            )
-        }
-    ) { paddingValues ->
+                )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(paddingValues)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .verticalScroll(rememberScrollState())
+                .statusBarsPadding()
+                .padding(horizontal = 24.dp)
         ) {
-            Text(
-                text = "Resumen del Hato",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Main Stat Card
-            Surface(
+            // Header
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-                shadowElevation = 4.dp
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.padding(24.dp)) {
+                Column {
                     Text(
-                        text = "Total Animales Activos",
+                        text = "Buenos días 👋",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.8f)
+                        color = TextSecondaryDark
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(40.dp),
-                            color = MaterialTheme.colorScheme.onSecondary
+                    Text(
+                        text = "MiFinca",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = TextPrimaryDark
+                    )
+                }
+
+                // Sync badge
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(SurfaceVariantDark)
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .clip(CircleShape)
+                                .background(GoldAccent)
                         )
-                    } else {
                         Text(
-                            text = "${uiState.activeAnimals}",
-                            style = MaterialTheme.typography.displayMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "de ${uiState.totalAnimals} totales",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.7f)
+                            text = "En línea",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = GoldAccent
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(28.dp))
+
+            // Hero card con degradado
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(GradientStart, GradientMid)
+                        )
+                    )
+                    .padding(28.dp)
+            ) {
+                Column {
+                    Text(
+                        text = "Hato Activo",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(44.dp),
+                            color = Color.White,
+                            strokeWidth = 3.dp
+                        )
+                    } else {
+                        Text(
+                            text = "${uiState.activeAnimals}",
+                            fontSize = 56.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color.White,
+                            lineHeight = 56.sp
+                        )
+                        Text(
+                            text = "animales activos de ${uiState.totalAnimals} totales",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.75f)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Accesos Rápidos",
+                text = "Módulos",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground
+                fontWeight = FontWeight.Bold,
+                color = TextPrimaryDark
             )
 
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Grid 2x2 de módulos
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                DashboardActionCard(
+                DashboardModuleCard(
+                    emoji = "🐄",
                     title = "Animales",
-                    subtitle = "Gestión y Registros",
+                    subtitle = "Gestión y registros",
+                    accentColor = RosePrimary,
                     modifier = Modifier.weight(1f),
                     onClick = onNavigateToAnimals
                 )
-                DashboardActionCard(
-                    title = "Eventos Salud",
-                    subtitle = "Vacunas y Tratamientos",
+                DashboardModuleCard(
+                    emoji = "💉",
+                    title = "Salud",
+                    subtitle = "Vacunas y tratamientos",
+                    accentColor = OrangeSecondary,
                     modifier = Modifier.weight(1f),
-                    onClick = { /* TODO */ }
+                    onClick = {}
                 )
             }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                DashboardModuleCard(
+                    emoji = "⚖️",
+                    title = "Movimientos",
+                    subtitle = "Compras y ventas",
+                    accentColor = GoldAccent,
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                )
+                DashboardModuleCard(
+                    emoji = "🔄",
+                    title = "Sincronizar",
+                    subtitle = "Actualizar datos",
+                    accentColor = Color(0xFF6BBF5E),
+                    modifier = Modifier.weight(1f),
+                    onClick = onNavigateToSync
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardActionCard(
+private fun DashboardModuleCard(
+    emoji: String,
     title: String,
     subtitle: String,
+    accentColor: Color,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier.height(120.dp),
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 2.dp
+    Box(
+        modifier = modifier
+            .height(130.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(SurfaceDark)
+            .clickable(onClick = onClick)
+            .padding(18.dp)
     ) {
+        // Borde de acento arriba a la derecha
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .align(Alignment.TopEnd)
+                .clip(CircleShape)
+                .background(accentColor.copy(alpha = 0.15f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = emoji, fontSize = 18.sp)
+        }
+
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.align(Alignment.BottomStart)
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = TextPrimaryDark
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = TextSecondaryDark,
+                maxLines = 1
             )
         }
     }

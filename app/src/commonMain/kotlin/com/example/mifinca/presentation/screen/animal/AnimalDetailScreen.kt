@@ -27,6 +27,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mifinca.presentation.component.StatusBadge
+import com.example.mifinca.presentation.theme.BackgroundDark
+import com.example.mifinca.presentation.theme.GradientEnd
+import com.example.mifinca.presentation.theme.GradientMid
+import com.example.mifinca.presentation.theme.GradientStart
+import com.example.mifinca.presentation.theme.RosePrimary
+import com.example.mifinca.presentation.theme.SurfaceDark
+import com.example.mifinca.presentation.theme.TextPrimaryDark
+import com.example.mifinca.presentation.theme.TextSecondaryDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
